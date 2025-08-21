@@ -1,224 +1,193 @@
 # 🎫 Helpdesk Sistemi
 
-Bu proje, Spring Boot backend ve minimal HTML/CSS/JavaScript frontend ile geliştirilmiş bir destek talebi yönetim sistemidir.
+Modern ve kullanıcı dostu bir destek talebi yönetim sistemi. Spring Boot backend ve vanilla JavaScript frontend ile geliştirilmiştir.
 
-## 🏗️ Proje Yapısı
+## 📋 Proje Açıklaması
 
-```
-helpdesk/
-├── backend/                 # Spring Boot Backend
-│   ├── src/main/java/
-│   │   └── com/hakan/helpdesk/
-│   │       ├── controller/ # REST API Controllers
-│   │       ├── service/    # Business Logic
-│   │       ├── repository/ # Data Access Layer
-│   │       ├── model/      # Entity Classes
-│   │       ├── dto/        # Data Transfer Objects
-│   │       ├── security/   # Security Configuration
-│   │       └── config/     # Application Configuration
-│   ├── src/main/resources/
-│   │   └── application.properties
-│   └── pom.xml
-├── frontend/               # HTML Frontend
-│   └── index.html
-└── README.md
-```
+Helpdesk Sistemi, kullanıcıların destek taleplerini oluşturmasına, takip etmesine ve yöneticilerin bu talepleri yönetmesine olanak sağlayan fullstack bir web uygulamasıdır.
 
-## 🚀 Özellikler
+### ✨ Özellikler
 
-### Backend (Spring Boot)
-- **Spring Security + JWT** - Güvenli kimlik doğrulama
-- **Spring Data JPA** - Veritabanı işlemleri
-- **PostgreSQL** - Ana veritabanı
-- **Role-based Access Control** - USER ve ADMIN rolleri
-- **RESTful API** - Modern web servisleri
+- **🔐 Kullanıcı Yönetimi**: JWT tabanlı kimlik doğrulama ve yetkilendirme
+- **🎫 Ticket Yönetimi**: Destek taleplerinin oluşturulması, düzenlenmesi ve takibi
+- **🔍 Gelişmiş Arama**: Durum, öncelik ve anahtar kelime bazlı filtreleme
+- **👥 Rol Tabanlı Erişim**: Admin ve User rolleri ile farklı yetki seviyeleri
+- **📊 Pagination**: Büyük veri setleri için sayfalama desteği
 
-### Frontend (HTML/CSS/JavaScript)
-- **Responsive Design** - Mobil uyumlu arayüz
-- **Modern UI/UX** - Gradient tasarım ve animasyonlar
-- **Real-time Updates** - Anlık veri güncellemeleri
-- **Search & Filter** - Gelişmiş arama özellikleri
-
-## 🛠️ Teknolojiler
+## 🏗️ Teknoloji Stack
 
 ### Backend
-- Java 21
-- Spring Boot 3.5.4
-- Spring Security
-- Spring Data JPA
-- PostgreSQL
-- JWT (JSON Web Token)
-- Lombok
-- Maven
+- **Java 21** - Modern Java sürümü
+- **Spring Boot 3.5.4** - Ana framework
+- **Spring Security** - Güvenlik ve kimlik doğrulama
+- **Spring Data JPA** - Veritabanı işlemleri
+- **PostgreSQL** - Ana veritabanı
+- **JWT** - Token tabanlı kimlik doğrulama
+- **Lombok** - Boilerplate kod azaltma
 
 ### Frontend
-- HTML5
-- CSS3 (Grid, Flexbox, Animations)
-- Vanilla JavaScript (ES6+)
-- Fetch API
-- Responsive Design
+- **Vanilla JavaScript** - Modern ES6+ özellikleri
+- **HTML5 & CSS3** - Responsive tasarım
+- **CSS Grid & Flexbox** - Modern layout sistemleri
 
-## 📋 Sistem Gereksinimleri
-
-- Java 21+
-- Maven 3.6+
-- PostgreSQL 12+
-- Modern web browser
+### DevOps
+- **Docker** - Containerization
+- **Docker Compose** - Multi-container orchestration
 
 ## 🚀 Kurulum ve Çalıştırma
 
-### 1. Backend Kurulumu
+### Gereksinimler
+- Java 21+
+- Docker & Docker Compose
+- Maven (opsiyonel)
 
+### Hızlı Başlangıç
+
+1. **Projeyi klonlayın**
 ```bash
-# PostgreSQL veritabanını başlat
-# application.properties'deki veritabanı bilgilerini güncelle
+git clone https://github.com/hakancankul/helpdesk
+cd helpdesk
+```
 
+2. **Docker ile çalıştırın**
+```bash
+docker-compose up -d
+```
+
+3. **Uygulamaya erişin**
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8080
+- PostgreSQL: localhost:5432
+
+### Manuel Kurulum
+
+1. **Veritabanını başlatın**
+```bash
+docker run -d \
+  --name helpdesk-postgres \
+  -e POSTGRES_DB=helpdesk \
+  -e POSTGRES_USER=helpdesk_user \
+  -e POSTGRES_PASSWORD=helpdesk_password \
+  -p 5432:5432 \
+  postgres:15-alpine
+```
+
+2. **Backend'i çalıştırın**
+```bash
 cd backend
-mvn clean install
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
-Backend `http://localhost:8080` adresinde çalışacak.
-
-### 2. Frontend Kurulumu
-
+3. **Frontend'i açın**
 ```bash
-# Frontend klasörüne git
 cd frontend
-
-# index.html dosyasını herhangi bir modern web tarayıcısında aç
-# Veya basit bir HTTP server başlat:
-python -m http.server 8000
-# Sonra http://localhost:8000 adresine git
+# index.html dosyasını tarayıcıda açın
 ```
 
-## 🔐 API Endpoints
+## 👥 Seed Kullanıcılar
 
-### Authentication
-- `POST /api/auth/register` - Kullanıcı kaydı
+Sistem ilk çalıştırıldığında otomatik olarak aşağıdaki test kullanıcıları oluşturulur:
+
+### Admin Kullanıcı
+- **Kullanıcı Adı**: `admin`
+- **Şifre**: `admin123`
+- **Rol**: ADMIN
+- **Yetkiler**: Tüm ticket'ları görüntüleme, düzenleme ve silme
+
+### Test Kullanıcıları
+- **Kullanıcı Adları**: `user1`, `user2`, `user3`, `user4`, `user5`
+- **Şifre**: `1234`
+- **Rol**: USER
+- **Yetkiler**: Kendi ticket'larını oluşturma, düzenleme ve silme
+
+### Örnek Veriler
+- **15 adet örnek ticket** otomatik oluşturulur
+- Farklı durumlar (Açık, İşlemde, Çözüldü, Kapalı)
+- Farklı öncelikler (Düşük, Orta, Yüksek)
+- Gerçekçi başlık ve açıklamalar
+
+## 🔧 API Endpoints
+
+### Kimlik Doğrulama
+- `POST /api/auth/register` - Yeni kullanıcı kaydı
 - `POST /api/auth/login` - Kullanıcı girişi
 
-### Tickets
+### Ticket Yönetimi
+- `GET /api/tickets` - Tüm ticket'ları listele (Admin)
+- `GET /api/tickets/{id}` - Ticket detayı
 - `POST /api/tickets` - Yeni ticket oluştur
-- `GET /api/tickets` - Tüm ticket'ları listele (ADMIN)
-- `GET /api/tickets/{id}` - Ticket detayını getir
-- `PUT /api/tickets/{id}/user-update` - USER ticket güncelleme
-- `PUT /api/tickets/{id}/admin-update` - ADMIN ticket güncelleme
+- `PUT /api/tickets/{id}/user-update` - User ticket güncelleme
+- `PUT /api/tickets/{id}/admin-update` - Admin ticket güncelleme
 - `DELETE /api/tickets/{id}` - Ticket sil
 - `GET /api/tickets/search` - Ticket arama ve filtreleme
 
-## 🎯 Kullanım Senaryoları
 
-### 1. Kullanıcı Kaydı ve Girişi
-- Yeni kullanıcı kaydı
-- JWT token ile güvenli giriş
-- Oturum yönetimi
+## 📁 Proje Yapısı
 
-### 2. Destek Talebi Yönetimi
-- Yeni destek talebi oluşturma
-- Öncelik seviyesi belirleme (LOW, MEDIUM, HIGH)
-- Durum takibi (OPEN, IN_PROGRESS, RESOLVED, CLOSED)
-- Açıklama ekleme
-
-### 3. Arama ve Filtreleme
-- Durum bazında filtreleme
-- Öncelik bazında filtreleme
-- Anahtar kelime ile arama
-- Sayfalama desteği
-
-### 4. Güvenlik
-- Role-based access control
-- JWT token authentication
-- API endpoint koruması
-
-## 🎨 Frontend Özellikleri
-
-- **Modern Tasarım**: Gradient arka plan, gölgeler, yuvarlatılmış köşeler
-- **Responsive Layout**: Grid ve Flexbox ile esnek düzen
-- **Interactive Elements**: Hover efektleri, animasyonlar
-- **Status Badges**: Renkli durum ve öncelik göstergeleri
-- **Form Validation**: HTML5 validation ve custom error handling
-- **Real-time Feedback**: Başarı/hata mesajları
-
-## 🔧 Konfigürasyon
-
-### Backend Konfigürasyonu
-`backend/src/main/resources/application.properties`:
-
-```properties
-# Database
-spring.datasource.url=jdbc:postgresql://localhost:5432/helpdesk
-spring.datasource.username=postgres
-spring.datasource.password=1234
-
-# JWT
-jwt.secret=your-secret-key
-
-# Server
-server.port=8080
+```
+helpdesk/
+├── backend/                 # Spring Boot uygulaması
+│   ├── src/main/java/
+│   │   └── com/hakan/helpdesk/
+│   │       ├── config/      # Konfigürasyon sınıfları
+│   │       ├── controller/  # REST API controller'ları
+│   │       ├── dto/         # Data Transfer Objects
+│   │       ├── model/       # JPA entity'leri
+│   │       ├── repository/  # Veritabanı repository'leri
+│   │       ├── security/    # Güvenlik sınıfları
+│   │       └── service/     # İş mantığı servisleri
+│   └── pom.xml
+├── frontend/                # HTML/CSS/JS dosyaları
+│   ├── index.html          # Ana uygulama
+│   └── Dockerfile
+├── docker-compose.yml       # Docker orchestration
+└── README.md
 ```
 
-### Frontend Konfigürasyonu
-`frontend/index.html` içinde API base URL'i güncelleyin:
 
-```javascript
-const API_BASE = 'http://localhost:8080/api';
-```
 
-## 🧪 Test
+### Veritabanı Şeması
+- **users**: Kullanıcı bilgileri
+- **roles**: Kullanıcı rolleri
+- **tickets**: Destek talepleri
+- **user_roles**: Kullanıcı-rol ilişkileri
 
-### Backend Test
-```bash
-cd backend
-mvn test
-```
+```mermaid
+erDiagram
+    USERS {
+        bigint id PK
+        varchar username
+        varchar password
+        timestamp created_at
+        timestamp updated_at
+    }
 
-### Frontend Test
-- Modern web tarayıcısında `index.html` dosyasını açın
-- Farklı ekran boyutlarında responsive tasarımı test edin
-- Tüm form validasyonlarını test edin
+    ROLES {
+        bigint id PK
+        varchar name
+    }
 
-## 📱 Responsive Design
+    USER_ROLES {
+        bigint user_id FK
+        bigint role_id FK
+    }
 
-Frontend aşağıdaki ekran boyutları için optimize edilmiştir:
-- **Desktop**: 1200px+
-- **Tablet**: 768px - 1199px
-- **Mobile**: 320px - 767px
+    TICKETS {
+        bigint id PK
+        varchar title
+        text description
+        varchar status
+        varchar priority
+        bigint created_by_id FK
+        bigint assigned_to_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
 
-## 🔒 Güvenlik Özellikleri
+    USERS ||--o{ USER_ROLES : "has roles"
+    ROLES ||--o{ USER_ROLES : "belongs to"
+    USERS ||--o{ TICKETS : "created tickets"
+    USERS ||--o{ TICKETS : "assigned tickets"
 
-- JWT token tabanlı kimlik doğrulama
-- Role-based access control
-- API endpoint koruması
-- Güvenli şifre hashleme
-- CORS konfigürasyonu
 
-## 🚀 Gelecek Geliştirmeler
-
-- [ ] Real-time notifications (WebSocket)
-- [ ] File upload desteği
-- [ ] Email notifications
-- [ ] Advanced reporting
-- [ ] Mobile app (React Native)
-- [ ] Dark mode
-- [ ] Multi-language support
-
-## 🤝 Katkıda Bulunma
-
-1. Fork yapın
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit yapın (`git commit -m 'Add amazing feature'`)
-4. Push yapın (`git push origin feature/amazing-feature`)
-5. Pull Request oluşturun
-
-## 📄 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır.
-
-## 👨‍💻 Geliştirici
-
-**Hakan** - Backend ve Frontend geliştirici
-
----
-
-**Not**: Bu proje eğitim amaçlı geliştirilmiştir. Production ortamında kullanmadan önce güvenlik testleri yapılması önerilir.
+**Not**: Bu proje Spring Boot 3.x ve Java 21 kullanmaktadır. Eski sürümlerle uyumluluk için gerekli değişiklikleri yapmanız gerekebilir.

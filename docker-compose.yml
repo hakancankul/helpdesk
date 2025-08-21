@@ -1,0 +1,50 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: helpdesk-postgres
+    environment:
+      POSTGRES_DB: helpdesk
+      POSTGRES_USER: helpdesk_user
+      POSTGRES_PASSWORD: helpdesk_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - helpdesk-network
+
+  # Backend Spring Boot Application
+  backend:
+    build: ./backend
+    container_name: helpdesk-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/helpdesk
+      SPRING_DATASOURCE_USERNAME: helpdesk_user
+      SPRING_DATASOURCE_PASSWORD: helpdesk_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: true
+    depends_on:
+      - postgres
+    networks:
+      - helpdesk-network
+
+  # Frontend Nginx Application
+  frontend:
+    build: ./frontend
+    container_name: helpdesk-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - helpdesk-network
+
+volumes:
+  postgres_data:
+
+networks:
+  helpdesk-network:
+    driver: bridge

@@ -1295,7 +1295,11 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8080/api';
+        // API URL'ini daha esnek hale getir
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:8080/api' 
+            : '/api';
+        
         let currentUser = null;
         let authToken = null;
         let userRoles = [];
@@ -1354,6 +1358,7 @@
             const password = document.getElementById('loginPassword').value;
 
             try {
+                console.log('Login attempt to:', `${API_BASE}/auth/login`);
                 const response = await fetch(`${API_BASE}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1380,10 +1385,13 @@
                     showMainApp();
                     loadTickets();
                 } else {
-                    showError('Giriş başarısız. Kullanıcı adı veya şifre hatalı.');
+                    const errorText = await response.text();
+                    console.error('Login failed:', response.status, errorText);
+                    showError(`Giriş başarısız (${response.status}): ${errorText || 'Kullanıcı adı veya şifre hatalı'}`);
                 }
             } catch (error) {
-                showError('Bağlantı hatası: ' + error.message);
+                console.error('Login error:', error);
+                showError(`Bağlantı hatası: ${error.message}. API URL: ${API_BASE}`);
             }
         });
 
@@ -1393,6 +1401,7 @@
             const password = document.getElementById('registerPassword').value;
 
             try {
+                console.log('Register attempt to:', `${API_BASE}/auth/register`);
                 const response = await fetch(`${API_BASE}/auth/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1404,10 +1413,12 @@
                     document.getElementById('registerForm').reset();
                 } else {
                     const errorText = await response.text();
-                    showError('Kayıt başarısız: ' + errorText);
+                    console.error('Register failed:', response.status, errorText);
+                    showError(`Kayıt başarısız (${response.status}): ${errorText}`);
                 }
             } catch (error) {
-                showError('Bağlantı hatası: ' + error.message);
+                console.error('Register error:', error);
+                showError(`Bağlantı hatası: ${error.message}. API URL: ${API_BASE}`);
             }
         });
 
