@@ -188,8 +188,7 @@ erDiagram
     ROLES ||--o{ USER_ROLES : "belongs to"
     USERS ||--o{ TICKETS : "created tickets"
     USERS ||--o{ TICKETS : "assigned tickets"
-    
-```mermaid
+```
 
 
 
