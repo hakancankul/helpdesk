@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record TicketRequest(
         @NotBlank String title,
-        String description,
+        @NotBlank String description,
         @NotNull Status status,
         @NotNull Priority priority,
         Long assignedToId) {

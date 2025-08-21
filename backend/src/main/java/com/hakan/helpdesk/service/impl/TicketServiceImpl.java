@@ -82,9 +82,9 @@ public class TicketServiceImpl implements TicketService {
             throw new AccessDeniedException("You can only update your own tickets");
         }
 
+        // User sadece title ve description güncelleyebilir
         ticket.setTitle(request.title());
         ticket.setDescription(request.description());
-        ticket.setPriority(request.priority());
         ticket.setUpdatedAt(LocalDateTime.now());
 
         return toDetailResponse(ticketRepository.save(ticket));

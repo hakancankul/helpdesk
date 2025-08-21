@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helpdesk Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #212529;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            background: #f8f9fa;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .auth-section {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .auth-tab {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            border-bottom: 2px solid transparent;
+        }
+
+        .auth-tab.active {
+            color: #212529;
+            border-bottom-color: #212529;
+            background-color: white;
+        }
+
+        .auth-tab:hover:not(.active) {
+            color: #495057;
+        }
+
+        .auth-form {
+            padding: 1rem 0;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .auth-switch a {
+            color: #212529;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            transition: all 0.15s ease-in-out;
+            background-color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #495057;
+            box-shadow: 0 0 0 2px rgba(73, 80, 87, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        textarea.form-control:focus {
+            border-color: #2c3e50;
+            box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            min-width: 120px;
+        }
+
+        .btn-center {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-primary {
+            background-color: #212529;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #000;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #495057;
+            border: 1px solid #ced4da;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8f9fa;
+            border-color: #adb5bd;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #495057;
+            border: 1px solid #ced4da;
+        }
+
+        .btn-outline:hover {
+            background-color: #495057;
+            color: white;
+        }
+
+        .btn-filter {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.3);
+        }
+
+        .btn-filter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(44, 62, 80, 0.4);
+        }
+
+        .btn-filter:active {
+            transform: translateY(0);
+        }
+
+        .btn-filter svg {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-filter:hover svg {
+            transform: scale(1.1);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: modalSlideIn 0.3s ease-out;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #212529;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+
+        .modal-close:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .modal-body {
+            padding: 1rem 1.25rem;
+        }
+
+        .modal-actions {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            background: #f8f9fa;
+            border-radius: 0 0 12px 12px;
+            flex-wrap: wrap;
+        }
+
+        .modal-actions .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            min-height: 36px;
+        }
+
+        .ticket-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.4s ease-out 0.1s both;
+        }
+
+        .ticket-description-full {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.4s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ticket-detail-item {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s ease;
+        }
+
+        .ticket-detail-item:hover {
+            background: #e9ecef;
+            border-color: #dee2e6;
+            transform: translateY(-1px);
+        }
+
+        .ticket-detail-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ticket-detail-value {
+            font-size: 0.95rem;
+            color: #212529;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-OPEN {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-IN_PROGRESS {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-RESOLVED {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-CLOSED {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .priority-LOW {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .priority-MEDIUM {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .priority-HIGH {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+
+
+        .ticket-description-full h4 {
+            margin: 0 0 0.75rem 0;
+            color: #495057;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ticket-description-text {
+            color: #495057;
+            line-height: 1.5;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .ticket-form {
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                max-width: 95vw;
+                max-height: 90vh;
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-actions {
+                padding: 0.75rem 1rem;
+            }
+
+            .ticket-detail-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .ticket-detail-item {
+                padding: 0.5rem;
+            }
+
+            .ticket-description-full {
+                padding: 0.75rem;
+            }
+        }
+
+        .search-section {
+            margin-bottom: 2rem;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 150px 150px 1fr 120px;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        @media (max-width: 768px) {
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tickets-list {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .tickets-list {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tickets-list {
+                grid-template-columns: 1fr;
+            }
+
+            .pagination-container {
+                padding: 1.5rem;
+                margin: 1.5rem 0;
+            }
+
+            .pagination-controls {
+                gap: 1rem;
+            }
+
+            .page-numbers {
+                gap: 0.5rem;
+            }
+
+            .page-number {
+                padding: 0.5rem 0.75rem;
+                min-width: 40px;
+            }
+        }
+
+        .ticket-item {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            height: fit-content;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .ticket-item:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .ticket-item.expanded {
+            border-color: #2c3e50;
+            box-shadow: 0 4px 16px rgba(44, 62, 80, 0.15);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .ticket-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #212529;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .ticket-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        .status-open {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-in-progress {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-resolved {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .status-closed {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .priority-low {
+            background: #e8f5e8;
+            color: #2d5a2d;
+            border: 1px solid #d4edda;
+        }
+
+        .priority-medium {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .priority-high {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .ticket-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        .ticket-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .ticket-user .user-name {
+            color: #6c757d;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        .ticket-time {
+            color: #6c757d;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        .ticket-description {
+            color: #495057;
+            margin-top: 1rem;
+            line-height: 1.6;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #2c3e50;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .ticket-description:hover {
+            background: #e9ecef;
+            border-left-color: #34495e;
+        }
+
+        .ticket-description strong {
+            color: #212529;
+            font-weight: 600;
+        }
+
+        .ticket-description-content {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .alert-error {
+            background: #f8f9fa;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-success {
+            background: #f8f9fa;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .welcome-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.3);
+        }
+
+        .welcome-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .welcome-info h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .user-name {
+            color: #ffd700;
+
+        }
+
+        .welcome-info p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(44, 62, 80, 0.15);
+            border-color: #2c3e50;
+        }
+
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-card p {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .btn-create {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(44, 62, 80, 0.3);
+        }
+
+        .btn-create:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(44, 62, 80, 0.4);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            /* tüm sütunları kapla */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-empty {
+            padding: 3rem 2rem;
+            text-align: center;
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .search-empty h3 {
+            color: #495057;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .search-empty p {
+            color: #6c757d;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #495057;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Pagination Styles */
+        .pagination-container {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .pagination-info {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #495057;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .page-numbers {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .page-number {
+            padding: 0.75rem 1rem;
+            border: 1px solid #ced4da;
+            background: white;
+            color: #495057;
+            text-decoration: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            min-width: 45px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .page-number:hover {
+            background: #f8f9fa;
+            border-color: #2c3e50;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(44, 62, 80, 0.1);
+        }
+
+        .page-number.active {
+            background: #2c3e50;
+            color: white;
+            border-color: #2c3e50;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.3);
+        }
+
+        .page-number.disabled {
+            background: #f8f9fa;
+            color: #adb5bd;
+            cursor: not-allowed;
+            border-color: #e9ecef;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+
+        <!-- Auth Section -->
+        <div class="auth-section" id="authSection">
+            <div class="card">
+                <div class="card-header">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">Giriş
+                            Yap</button>
+                        <button class="auth-tab" id="registerTab" onclick="switchAuthTab('register')">Kayıt Ol</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Login Form -->
+                    <div id="loginFormContainer" class="auth-form">
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label for="loginUsername">Kullanıcı Adı</label>
+                                <input type="text" id="loginUsername" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="loginPassword">Şifre</label>
+                                <input type="password" id="loginPassword" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-center">Giriş Yap</button>
+                        </form>
+                        <p class="auth-switch">
+                            Hesabınız yok mu?
+                            <a href="#" onclick="switchAuthTab('register')">Kayıt olun</a>
+                        </p>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="registerFormContainer" class="auth-form hidden">
+                        <form id="registerForm">
+                            <div class="form-group">
+                                <label for="registerUsername">Kullanıcı Adı</label>
+                                <input type="text" id="registerUsername" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerPassword">Şifre</label>
+                                <input type="password" id="registerPassword" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-center">Kayıt Ol</button>
+                        </form>
+                        <p class="auth-switch">
+                            Zaten hesabınız var mı?
+                            <a href="#" onclick="switchAuthTab('login')">Giriş yapın</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main App Section -->
+        <div class="hidden" id="mainApp">
+            <!-- Welcome Header -->
+            <div class="welcome-header">
+                <div class="welcome-content">
+                    <div class="welcome-info">
+                        <h1>Hoş geldin, <span id="userDisplay" class="user-name"></span>! 👋</h1>
+                        <p>Destek taleplerinizi yönetmek için aşağıdaki seçenekleri kullanabilirsiniz.</p>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16,17 21,12 16,7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Çıkış Yap
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card" onclick="scrollToTickets()">
+                    <div class="action-icon">📋</div>
+                    <h3>Talepleri Görüntüle</h3>
+                    <p>Mevcut talepleri incele</p>
+                </div>
+                <div class="action-card" onclick="scrollToTicketForm()">
+                    <div class="action-icon">📝</div>
+                    <h3>Yeni Talep</h3>
+                    <p>Destek talebi oluştur</p>
+                </div>
+            </div>
+
+            <!-- Search Section -->
+            <div class="card search-section" id="searchSection">
+                <div class="card-header">
+                    <h3>🔍 Talepleri Ara ve Filtrele</h3>
+                </div>
+                <div class="card-body">
+                    <div class="search-row">
+                        <div class="form-group">
+                            <label for="searchStatus">Durum</label>
+                            <select id="searchStatus" class="form-control">
+                                <option value="">Tümü</option>
+                                <option value="OPEN">🟢 Açık</option>
+                                <option value="IN_PROGRESS">🟡 İşlemde</option>
+                                <option value="RESOLVED">🔵 Çözüldü</option>
+                                <option value="CLOSED">⚫ Kapalı</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="searchPriority">Öncelik</label>
+                            <select id="searchPriority" class="form-control">
+                                <option value="">Tümü</option>
+                                <option value="LOW">🟢 Düşük</option>
+                                <option value="MEDIUM">🟡 Orta</option>
+                                <option value="HIGH">🔴 Yüksek</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="searchKeyword">Arama</label>
+                            <input type="text" id="searchKeyword" class="form-control"
+                                placeholder="Başlık veya açıklamada ara...">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-filter" onclick="searchTickets()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3" />
+                                </svg>
+                                Filtrele
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tickets List -->
+            <div class="tickets-list" id="ticketsList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-container" id="paginationContainer">
+                <div class="pagination-info">
+                    <span id="paginationInfo"></span>
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn btn-outline" id="prevPage" onclick="previousPage()" disabled>
+                        ← Önceki
+                    </button>
+                    <div class="page-numbers" id="pageNumbers"></div>
+                    <button class="btn btn-outline" id="nextPage" onclick="nextPage()" disabled>
+                        Sonraki →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ticket Form -->
+            <div class="card ticket-form" id="ticketFormSection">
+                <div class="card-header">
+                    <h3>📝 Yeni Destek Talebi Oluştur</h3>
+                </div>
+                <div class="card-body">
+                    <form id="ticketForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ticketTitle">Başlık</label>
+                                <input type="text" id="ticketTitle" class="form-control"
+                                    placeholder="Probleminizi kısaca özetleyin" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticketPriority">Öncelik</label>
+                                <select id="ticketPriority" class="form-control" required>
+                                    <option value="LOW">🟢 Düşük</option>
+                                    <option value="MEDIUM">🟡 Orta</option>
+                                    <option value="HIGH">🔴 Yüksek</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketDescription">Detaylı Açıklama</label>
+                            <textarea id="ticketDescription" class="form-control"
+                                placeholder="Probleminizi detaylı bir şekilde açıklayın. Hata mesajları, ekran görüntüleri, adım adım yapılan işlemler gibi bilgileri ekleyin..."
+                                rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-create">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 5v14M5 12h14"></path>
+                            </svg>
+                            Talep Oluştur
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticket Detail Modal -->
+    <div class="modal-overlay hidden" id="ticketModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Ticket Detayı</h3>
+                <button class="modal-close" onclick="closeTicketModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="ticket-detail-grid">
+                    <div class="ticket-detail-item">
+                        <div class="ticket-detail-label">Durum</div>
+                        <div class="ticket-detail-value" id="modalStatus">-</div>
+                    </div>
+                    <div class="ticket-detail-item">
+                        <div class="ticket-detail-label">Öncelik</div>
+                        <div class="ticket-detail-value" id="modalPriority">-</div>
+                    </div>
+                    <div class="ticket-detail-item">
+                        <div class="ticket-detail-label">Oluşturan</div>
+                        <div class="ticket-detail-value" id="modalCreatedBy">-</div>
+                    </div>
+                    <div class="ticket-detail-item">
+                        <div class="ticket-detail-label">Tarih</div>
+                        <div class="ticket-detail-value" id="modalCreatedAt">-</div>
+                    </div>
+                </div>
+
+                <div class="ticket-description-full">
+                    <h4>Açıklama</h4>
+                    <div class="ticket-description-content">
+                        <p class="ticket-description-text" id="modalDescription">Açıklama bulunmuyor.</p>
+                    </div>
+                </div>
+
+                <!-- Edit Form (Hidden by default) -->
+                <div id="editForm" class="hidden">
+                    <h4 id="editFormTitle">Ticket Düzenle</h4>
+
+                    <!-- User Edit Fields -->
+                    <div id="userEditFields">
+                        <div class="form-group">
+                            <label for="editTitle">Başlık</label>
+                            <input type="text" id="editTitle" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDescription">Açıklama</label>
+                            <textarea id="editDescription" class="form-control"
+                                placeholder="Probleminizi detaylı bir şekilde açıklayın..." rows="4"
+                                required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Admin Edit Fields -->
+                    <div id="adminEditFields" class="hidden">
+                        <div class="form-group">
+                            <label for="editStatus">Durum</label>
+                            <select id="editStatus" class="form-control" required>
+                                <option value="OPEN">🟢 Açık</option>
+                                <option value="IN_PROGRESS">🟡 İşlemde</option>
+                                <option value="RESOLVED">🔵 Çözüldü</option>
+                                <option value="CLOSED">⚫ Kapalı</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPriorityAdmin">Öncelik</label>
+                            <select id="editPriorityAdmin" class="form-control" required>
+                                <option value="LOW">🟢 Düşük</option>
+                                <option value="MEDIUM">🟡 Orta</option>
+                                <option value="HIGH">🔴 Yüksek</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeTicketModal()">Kapat</button>
+                <button class="btn btn-outline" id="editButton" onclick="toggleEditForm()">Düzenle</button>
+                <button class="btn btn-primary hidden" id="saveButton" onclick="saveTicketChanges()">Kaydet</button>
+                <button class="btn btn-outline hidden" id="cancelEditButton" onclick="cancelEdit()">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+        let currentUser = null;
+        let authToken = null;
+        let userRoles = [];
+        let currentPage = 0;
+        let pageSize = 6;
+        let totalPages = 0;
+        let totalElements = 0;
+
+        // JWT token'dan role bilgisini çıkarma fonksiyonu
+        function parseJWT(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Kullanıcının admin olup olmadığını kontrol etme
+        function isAdmin() {
+            return userRoles.some(role => role === 'ROLE_ADMIN' || role === 'ADMIN');
+        }
+
+        // Auth tab switching
+        function switchAuthTab(tab) {
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const loginForm = document.getElementById('loginFormContainer');
+            const registerForm = document.getElementById('registerFormContainer');
+
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                // Focus on first input
+                setTimeout(() => document.getElementById('loginUsername').focus(), 100);
+            } else {
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                // Focus on first input
+                setTimeout(() => document.getElementById('registerUsername').focus(), 100);
+            }
+        }
+
+        // Auth Functions
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.token;
+                    currentUser = username;
+
+                    // Token'dan rol bilgisini çıkar
+                    const tokenData = parseJWT(authToken);
+                    console.log('Token data:', tokenData); // Debug için
+                    if (tokenData && tokenData.roles) {
+                        userRoles = Array.isArray(tokenData.roles) ? tokenData.roles : [tokenData.roles];
+                    } else if (tokenData && tokenData.authorities) {
+                        userRoles = Array.isArray(tokenData.authorities) ? tokenData.authorities : [tokenData.authorities];
+                    } else {
+                        userRoles = [];
+                    }
+                    console.log('User roles:', userRoles); // Debug için
+
+                    showMainApp();
+                    loadTickets();
+                } else {
+                    showError('Giriş başarısız. Kullanıcı adı veya şifre hatalı.');
+                }
+            } catch (error) {
+                showError('Bağlantı hatası: ' + error.message);
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    showSuccess('Kayıt başarılı! Şimdi giriş yapabilirsiniz.');
+                    document.getElementById('registerForm').reset();
+                } else {
+                    const errorText = await response.text();
+                    showError('Kayıt başarısız: ' + errorText);
+                }
+            } catch (error) {
+                showError('Bağlantı hatası: ' + error.message);
+            }
+        });
+
+        // Ticket Functions
+        document.getElementById('ticketForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('ticketTitle').value;
+            const description = document.getElementById('ticketDescription').value;
+            const priority = document.getElementById('ticketPriority').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/tickets`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        title,
+                        description,
+                        status: 'OPEN',
+                        priority,
+                        assignedToId: null
+                    })
+                });
+
+                if (response.ok) {
+                    showSuccess('Destek talebi başarıyla oluşturuldu!');
+                    document.getElementById('ticketForm').reset();
+                    loadTickets();
+                } else {
+                    showError('Destek talebi oluşturulamadı.');
+                }
+            } catch (error) {
+                showError('Bağlantı hatası: ' + error.message);
+            }
+        });
+
+        async function loadTickets() {
+            try {
+                const response = await fetch(`${API_BASE}/tickets/search?page=${currentPage}&size=${pageSize}`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.content) {
+                        // Paginated response
+                        displayTickets(data.content);
+                        updatePagination(data);
+                    } else {
+                        // Non-paginated response
+                        displayTickets(data);
+                        updatePagination({ totalPages: 1, totalElements: data.length || 0, numberOfElements: data.length || 0, number: 0 });
+                    }
+                } else {
+                    displayTickets([]);
+                    updatePagination({ totalPages: 1, totalElements: 0, numberOfElements: 0, number: 0 });
+                }
+            } catch (error) {
+                showError('Destek talepleri yüklenemedi: ' + error.message);
+                displayTickets([]);
+                updatePagination({ totalPages: 1, totalElements: 0, numberOfElements: 0, number: 0 });
+            }
+        }
+
+        async function searchTickets() {
+            const status = document.getElementById('searchStatus').value;
+            const priority = document.getElementById('searchPriority').value;
+            const keyword = document.getElementById('searchKeyword').value;
+
+            // Reset to first page when searching
+            currentPage = 0;
+            showLoading();
+
+            try {
+                const params = new URLSearchParams();
+                if (status) params.append('status', status);
+                if (priority) params.append('priority', priority);
+                if (keyword) params.append('keyword', keyword);
+                params.append('page', currentPage);
+                params.append('size', pageSize);
+
+                const response = await fetch(`${API_BASE}/tickets/search?${params}`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.content) {
+                        displayTickets(data.content, true);
+                        updatePagination(data);
+                    } else {
+                        displayTickets(data, true);
+                        updatePagination({ totalPages: 1, totalElements: data.length || 0, numberOfElements: data.length || 0, number: 0 });
+                    }
+                } else {
+                    displayTickets([], true);
+                    updatePagination({ totalPages: 1, totalElements: 0, numberOfElements: 0, number: 0 });
+                }
+            } catch (error) {
+                showError('Arama yapılamadı: ' + error.message);
+                displayTickets([], true);
+                updatePagination({ totalPages: 1, totalElements: 0, numberOfElements: 0, number: 0 });
+            }
+        }
+
+        function showLoading() {
+            const container = document.getElementById('ticketsList');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+        }
+
+        function displayTickets(tickets, isSearchResult = false) {
+            const container = document.getElementById('ticketsList');
+            container.innerHTML = '';
+
+            if (tickets.length === 0) {
+                if (isSearchResult) {
+                    // Filtreleme sonrası sonuç yoksa
+                    container.innerHTML = `
+                            <div class="empty-state search-empty">
+                                <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                                </svg>
+                                <h3>Aradığınız kriterlerde sonuç bulunamadı</h3>
+                                <p>Filtreleme kriterlerinizi değiştirerek tekrar deneyin.</p>
+                            </div>
+                        `;
+                } else {
+                    // Genel olarak hiç ticket yoksa
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            <p>Henüz destek talebi bulunmuyor.</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Yeni bir talep oluşturmak için yukarıdaki formu kullanın.</p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            tickets.forEach(ticket => {
+                const ticketElement = createTicketElement(ticket);
+                container.appendChild(ticketElement);
+            });
+        }
+
+        function createTicketElement(ticket) {
+            const div = document.createElement('div');
+            div.className = 'ticket-item';
+
+            const statusClass = `status-${ticket.status.toLowerCase().replace('_', '-')}`;
+            const priorityClass = `priority-${ticket.priority.toLowerCase()}`;
+
+            // Kullanıcı adının baş harfini al
+            const userName = ticket.createdBy || 'Bilinmiyor';
+            const userInitial = userName.charAt(0).toUpperCase();
+
+            div.innerHTML = `
+                <div class="ticket-header">
+                    <div class="ticket-title">${ticket.title}</div>
+                    <div class="ticket-badges">
+                        <span class="badge ${statusClass}">${getStatusText(ticket.status)}</span>
+                        <span class="badge ${priorityClass}">${getPriorityText(ticket.priority)}</span>
+                    </div>
+                </div>
+                <div class="ticket-footer">
+                    <div class="ticket-user">
+                        <div class="user-avatar">${userInitial}</div>
+                        <span class="user-name">${userName}</span>
+                    </div>
+                    <div class="ticket-time">${formatRelativeTime(ticket.createdAt)}</div>
+                </div>
+            `;
+
+            // Add click event to open modal
+            div.addEventListener('click', () => openTicketModal(ticket));
+
+            return div;
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'OPEN': 'Açık',
+                'IN_PROGRESS': 'İşlemde',
+                'RESOLVED': 'Çözüldü',
+                'CLOSED': 'Kapalı'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getPriorityText(priority) {
+            const priorityMap = {
+                'LOW': 'Düşük',
+                'MEDIUM': 'Orta',
+                'HIGH': 'Yüksek'
+            };
+            return priorityMap[priority] || priority;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Bilinmiyor';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('tr-TR', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function formatRelativeTime(dateString) {
+            if (!dateString) return 'Bilinmiyor';
+
+            const now = new Date();
+            const date = new Date(dateString);
+            const diffInMs = now - date;
+            const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+            const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+            const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+            if (diffInMinutes < 1) {
+                return 'Az önce';
+            } else if (diffInMinutes < 60) {
+                return `${diffInMinutes} dakika önce`;
+            } else if (diffInHours < 24) {
+                return `${diffInHours} saat önce`;
+            } else if (diffInDays < 7) {
+                return `${diffInDays} gün önce`;
+            } else {
+                return date.toLocaleDateString('tr-TR', {
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
+        }
+
+        function showMainApp() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            const roleText = isAdmin() ? ' (Admin)' : ' (User)';
+            document.getElementById('userDisplay').textContent = currentUser + roleText;
+        }
+
+        function logout() {
+            authToken = null;
+            currentUser = null;
+            userRoles = [];
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+            document.getElementById('registerForm').reset();
+            clearMessages();
+        }
+
+        function showError(message) {
+            clearMessages();
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-error';
+            errorDiv.textContent = message;
+            document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.container').firstElementChild.nextElementSibling);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        function showSuccess(message) {
+            clearMessages();
+            const successDiv = document.createElement('div');
+            successDiv.className = 'alert alert-success';
+            successDiv.textContent = message;
+            document.querySelector('.container').insertBefore(successDiv, document.querySelector('.container').firstElementChild.nextElementSibling);
+            setTimeout(() => successDiv.remove(), 5000);
+        }
+
+        function clearMessages() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => alert.remove());
+        }
+
+        // Pagination functions
+        function updatePagination(data) {
+            // Pagination bilgilerini güncelle
+            if (data.totalPages !== undefined) {
+                currentPage = data.number || 0;
+                totalPages = data.totalPages || 1;
+                totalElements = data.totalElements || 0;
+            } else {
+                // Eğer paginated response değilse, tek sayfa olarak kabul et
+                currentPage = 0;
+                totalPages = 1;
+                totalElements = data.length || 0;
+            }
+
+            // Pagination bilgisini güncelle
+            document.getElementById('paginationInfo').textContent =
+                `${data.numberOfElements || data.length || 0} / ${totalElements} talep gösteriliyor • Sayfa ${currentPage + 1} / ${totalPages}`;
+
+            // Sayfa numaralarını güncelle
+            updatePageNumbers();
+            updatePaginationButtons();
+
+            // Pagination'ı göster (her zaman)
+            document.getElementById('paginationContainer').style.display = 'block';
+        }
+
+        function hidePagination() {
+            // Pagination'ı gizleme, sadece bilgileri sıfırla
+            currentPage = 0;
+            totalPages = 1;
+            totalElements = 0;
+            updatePagination({ totalPages: 1, totalElements: 0, numberOfElements: 0, number: 0 });
+        }
+
+        function updatePageNumbers() {
+            const container = document.getElementById('pageNumbers');
+            container.innerHTML = '';
+
+            const startPage = Math.max(0, currentPage - 2);
+            const endPage = Math.min(totalPages - 1, currentPage + 2);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `page-number ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i + 1;
+                pageBtn.onclick = () => goToPage(i);
+                container.appendChild(pageBtn);
+            }
+        }
+
+        function updatePaginationButtons() {
+            document.getElementById('prevPage').disabled = currentPage === 0;
+            document.getElementById('nextPage').disabled = currentPage === totalPages - 1;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadTickets();
+        }
+
+        function previousPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                loadTickets();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                loadTickets();
+            }
+        }
+
+
+
+        // Modal functions
+        let currentEditingTicket = null;
+
+        async function openTicketModal(ticket) {
+            try {
+                const response = await fetch(`${API_BASE}/tickets/${ticket.id}`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    const fullTicket = await response.json();
+                    currentEditingTicket = fullTicket;
+
+                    document.getElementById('modalTitle').textContent = fullTicket.title;
+
+                    // Apply status badge
+                    const statusElement = document.getElementById('modalStatus');
+                    statusElement.textContent = getStatusText(fullTicket.status);
+                    statusElement.className = 'ticket-detail-value status-badge status-' + fullTicket.status;
+
+                    // Apply priority badge
+                    const priorityElement = document.getElementById('modalPriority');
+                    priorityElement.textContent = getPriorityText(fullTicket.priority);
+                    priorityElement.className = 'ticket-detail-value priority-badge priority-' + fullTicket.priority;
+
+                    document.getElementById('modalCreatedBy').textContent = fullTicket.createdBy || 'Bilinmiyor';
+                    document.getElementById('modalCreatedAt').textContent = formatDate(fullTicket.createdAt);
+                    document.getElementById('modalDescription').textContent = fullTicket.description || 'Açıklama bulunmuyor.';
+
+                    // edit form doldur - rol kontrolü
+                    if (isAdmin()) {
+                        document.getElementById('editFormTitle').textContent = 'Admin Ticket Düzenle';
+                        document.getElementById('editStatus').value = fullTicket.status;
+                        document.getElementById('editPriorityAdmin').value = fullTicket.priority;
+                    } else {
+                        document.getElementById('editFormTitle').textContent = 'Ticket Düzenle';
+                        document.getElementById('editTitle').value = fullTicket.title;
+                        document.getElementById('editDescription').value = fullTicket.description || '';
+                    }
+
+                    document.getElementById('ticketModal').classList.remove('hidden');
+                    hideEditForm();
+                } else {
+                    showError("Ticket detayı alınamadı");
+                }
+            } catch (err) {
+                showError("Bağlantı hatası: " + err.message);
+            }
+        }
+
+        function closeTicketModal() {
+            document.getElementById('ticketModal').classList.add('hidden');
+            currentEditingTicket = null;
+        }
+
+        function toggleEditForm() {
+            const editForm = document.getElementById('editForm');
+            const editButton = document.getElementById('editButton');
+            const saveButton = document.getElementById('saveButton');
+            const cancelEditButton = document.getElementById('cancelEditButton');
+            const userEditFields = document.getElementById('userEditFields');
+            const adminEditFields = document.getElementById('adminEditFields');
+
+            if (editForm.classList.contains('hidden')) {
+                // Show edit form
+                editForm.classList.remove('hidden');
+                editButton.classList.add('hidden');
+                saveButton.classList.remove('hidden');
+                cancelEditButton.classList.remove('hidden');
+
+                // Rol'e göre alanları göster/gizle
+                console.log('Is admin check:', isAdmin()); // Debug için
+                console.log('Current user roles:', userRoles); // Debug için
+                if (isAdmin()) {
+                    console.log('Showing admin fields'); // Debug için
+                    userEditFields.classList.add('hidden');
+                    adminEditFields.classList.remove('hidden');
+                } else {
+                    console.log('Showing user fields'); // Debug için
+                    userEditFields.classList.remove('hidden');
+                    adminEditFields.classList.add('hidden');
+                }
+            } else {
+                // Hide edit form
+                hideEditForm();
+            }
+        }
+
+        function hideEditForm() {
+            document.getElementById('editForm').classList.add('hidden');
+            document.getElementById('editButton').classList.remove('hidden');
+            document.getElementById('saveButton').classList.add('hidden');
+            document.getElementById('cancelEditButton').classList.add('hidden');
+        }
+
+        function cancelEdit() {
+            // Reset form to original values
+            if (currentEditingTicket) {
+                if (isAdmin()) {
+                    document.getElementById('editStatus').value = currentEditingTicket.status;
+                    document.getElementById('editPriorityAdmin').value = currentEditingTicket.priority;
+                } else {
+                    document.getElementById('editTitle').value = currentEditingTicket.title;
+                    document.getElementById('editDescription').value = currentEditingTicket.description || '';
+                }
+            }
+            hideEditForm();
+        }
+
+        async function saveTicketChanges() {
+            if (!currentEditingTicket) return;
+
+            try {
+                let endpoint, requestBody;
+
+                if (isAdmin()) {
+                    // Admin güncelleme
+                    const status = document.getElementById('editStatus').value;
+                    const priority = document.getElementById('editPriorityAdmin').value;
+
+                    endpoint = `${API_BASE}/tickets/${currentEditingTicket.id}/admin-update`;
+                    requestBody = {
+                        status,
+                        priority
+                    };
+                } else {
+                    // User güncelleme
+                    const title = document.getElementById('editTitle').value;
+                    const description = document.getElementById('editDescription').value;
+
+                    endpoint = `${API_BASE}/tickets/${currentEditingTicket.id}/user-update`;
+                    requestBody = {
+                        title,
+                        description
+                    };
+                }
+
+                const response = await fetch(endpoint, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (response.ok) {
+                    showSuccess('Ticket başarıyla güncellendi!');
+                    closeTicketModal();
+                    loadTickets(); // Refresh the list
+                } else {
+                    showError('Ticket güncellenemedi.');
+                }
+            } catch (error) {
+                showError('Bağlantı hatası: ' + error.message);
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeTicketModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !document.getElementById('ticketModal').classList.contains('hidden')) {
+                closeTicketModal();
+            }
+        });
+
+        // Scroll functions for quick actions
+        function scrollToTicketForm() {
+            document.getElementById('ticketFormSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToSearch() {
+            document.getElementById('searchSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToTickets() {
+            document.getElementById('ticketsList').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start with login tab active
+            switchAuthTab('login');
+
+            // Add auto-filtering event listeners for keyword only
+            document.getElementById('searchKeyword').addEventListener('input', debounce(searchTickets, 500));
+
+            // Initialize pagination with default values
+            updatePagination({ totalPages: 1, totalElements: 0, numberOfElements: 0, number: 0 });
+        });
+
+        // Debounce function to avoid too many API calls while typing
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    </script>
+</body>
+
+</html>
