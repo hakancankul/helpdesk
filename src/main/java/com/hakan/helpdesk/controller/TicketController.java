@@ -25,9 +25,13 @@ public class TicketController {
     // 1. Yeni ticket oluştur
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @PostMapping
-    public ResponseEntity<TicketDetailResponse> createTicket(@Valid @RequestBody TicketRequest request,
-            Authentication auth) {
-        return ResponseEntity.ok(ticketService.createTicket(request, auth.getName()));
+    public ResponseEntity<TicketDetailResponse> createTicket(
+            @Valid @RequestBody TicketRequest request,
+            Authentication authentication) {
+
+        String username = authentication.getName();
+        TicketDetailResponse response = ticketService.createTicket(request, username);
+        return ResponseEntity.ok(response);
     }
 
     // 2. Tüm ticket’ları listele

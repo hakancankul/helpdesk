@@ -5,6 +5,7 @@ import com.hakan.helpdesk.dto.TicketDetailResponse;
 import com.hakan.helpdesk.dto.TicketRequest;
 import com.hakan.helpdesk.dto.TicketSummaryResponse;
 import com.hakan.helpdesk.dto.TicketUserUpdateRequest;
+import com.hakan.helpdesk.model.Status;
 import com.hakan.helpdesk.model.Ticket;
 import com.hakan.helpdesk.model.User;
 import com.hakan.helpdesk.repository.TicketRepository;
@@ -28,26 +29,19 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDetailResponse createTicket(TicketRequest request, String username) {
-        User createdBy = userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        User assignedTo = null;
-        if (request.assignedToId() != null) {
-            assignedTo = userRepository.findById(request.assignedToId())
-                    .orElseThrow(() -> new RuntimeException("Assigned user not found"));
-        }
 
         Ticket ticket = Ticket.builder()
                 .title(request.title())
                 .description(request.description())
-                .status(request.status())
                 .priority(request.priority())
-                .createdBy(createdBy)
-                .assignedTo(assignedTo)
+                .status(Status.OPEN) // status'u hep OPEN başlatmak istiyorsan sabit bırak
+                .createdBy(user)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         Ticket saved = ticketRepository.save(ticket);
-
         return toDetailResponse(saved);
     }
 

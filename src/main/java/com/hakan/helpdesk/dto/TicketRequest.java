@@ -10,6 +10,5 @@ public record TicketRequest(
         String description,
         @NotNull Status status,
         @NotNull Priority priority,
-        @NotNull Long createdById,
-        Long assignedToId
-) {}
+        Long assignedToId) {
+}
