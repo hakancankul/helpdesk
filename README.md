@@ -188,6 +188,10 @@ erDiagram
     ROLES ||--o{ USER_ROLES : "belongs to"
     USERS ||--o{ TICKETS : "created tickets"
     USERS ||--o{ TICKETS : "assigned tickets"
+    
+```mermaid
+
+
 
 
 **Not**: Bu proje Spring Boot 3.x ve Java 21 kullanmaktadır. Eski sürümlerle uyumluluk için gerekli değişiklikleri yapmanız gerekebilir.
