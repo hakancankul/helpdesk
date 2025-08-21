@@ -14,9 +14,12 @@ import com.hakan.helpdesk.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-
+import com.hakan.helpdesk.model.Priority;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -116,6 +119,52 @@ public class TicketServiceImpl implements TicketService {
         } else {
             throw new AccessDeniedException("You cannot delete this ticket");
         }
+    }
+
+    @Override
+    public Page<TicketSummaryResponse> searchTickets(
+            String status,
+            String priority,
+            String assignedTo,
+            String keyword,
+            String currentUsername,
+            Pageable pageable) {
+
+        Specification<Ticket> spec = Specification.unrestricted();
+
+        if (status != null && !status.isBlank()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), Status.valueOf(status.toUpperCase())));
+        }
+
+        if (priority != null && !priority.isBlank()) {
+            spec = spec
+                    .and((root, query, cb) -> cb.equal(root.get("priority"), Priority.valueOf(priority.toUpperCase())));
+        }
+
+        if (assignedTo != null && !assignedTo.isBlank()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("assignedTo").get("username"), assignedTo));
+        }
+
+        if (keyword != null && !keyword.isBlank()) {
+            String likePattern = "%" + keyword.toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> cb.or(
+                    cb.like(cb.lower(root.get("title")), likePattern),
+                    cb.like(cb.lower(root.get("description")), likePattern)));
+        }
+
+        // USER kısıtlaması
+        User currentUser = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isAdmin = currentUser.getRoles().stream()
+                .anyMatch(r -> r.getName().equals("ADMIN"));
+
+        if (!isAdmin) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("createdBy").get("username"), currentUsername));
+        }
+
+        return ticketRepository.findAll(spec, pageable) 
+                .map(this::toSummaryResponse);
     }
 
     private TicketSummaryResponse toSummaryResponse(Ticket ticket) {

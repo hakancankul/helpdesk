@@ -8,6 +8,10 @@ import com.hakan.helpdesk.dto.TicketUserUpdateRequest;
 import com.hakan.helpdesk.service.TicketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +26,7 @@ public class TicketController {
 
     private final TicketService ticketService;
 
-    // 1. Yeni ticket oluştur
+    // Yeni ticket oluştur
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @PostMapping
     public ResponseEntity<TicketDetailResponse> createTicket(
@@ -34,14 +38,14 @@ public class TicketController {
         return ResponseEntity.ok(response);
     }
 
-    // 2. Tüm ticket’ları listele
+    // Tüm ticket’ları listele
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<TicketSummaryResponse>> getAllTickets() {
         return ResponseEntity.ok(ticketService.getAllTickets());
     }
 
-    // 3. Ticket detayını getir
+    // Ticket detayını getir
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<TicketDetailResponse> getTicketById(@PathVariable Long id) {
@@ -67,11 +71,33 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.updateTicketByAdmin(id, request));
     }
 
-    // 5. Ticket sil
+    // Ticket sil
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTicket(@PathVariable Long id, Authentication auth) {
         ticketService.deleteTicket(id, auth.getName());
         return ResponseEntity.noContent().build();
     }
+
+    // Ticket arama
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/search")
+    public ResponseEntity<Page<TicketSummaryResponse>> searchTickets(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false) String assignedTo,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt,desc") String sort,
+            Authentication auth) {
+        String username = auth.getName();
+        String[] sortParams = sort.split(",");
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]));
+
+        return ResponseEntity
+                .ok(ticketService.searchTickets(status, priority, assignedTo, keyword, username, pageable));
+    }
+
 }
